@@ -1,0 +1,5 @@
+<h1>Hola desde home</h1>
+{{!-- iterar listas y usar sus propiedades --}}
+{{#each urls }}
+    {{> Card item=this}}{{!-- pasar el this al otro componente (EL THIS SE PASA AUTOMATICO, esta es la forma explicita) --}}
+{{/each}}

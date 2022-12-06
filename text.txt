@@ -1,0 +1,1 @@
+nodemon.json: guarda todas las extenciones de la cual esta apendiente cuando hay un cambio, de esa forma reinicia el servidor
