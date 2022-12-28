@@ -1,13 +1,14 @@
 const express = require('express');
-const router = express.Router()
+const {leerUrls ,agregarUrl, eliminarUrl, findParaEditar, editarUrl, redireccionamiento} = require('../controllers/homeControllers');
+const validarUrl = require('../middleware/urlValida');
 
-router.get('/', (req, res) =>{
-    const urls = [
-        {origin: "www.google.com/algo", shortUrl: "sdasdas"},
-        {origin: "www.google.com/nada", shortUrl: "sdasdas"},
-        {origin: "www.google.com/todo", shortUrl: "sdasdas"},
-    ] 
-    res.render('home', {urls: urls}) // renderizo home desde la carpeta views
-});
+const router = express.Router();
 
-module.exports = router
+router.get('/', leerUrls);
+router.post('/', validarUrl, agregarUrl);
+router.get('/eliminar/:id', eliminarUrl);
+router.get('/editar/:id', findParaEditar );
+router.post('/editar/:id', validarUrl, editarUrl )
+router.get('/:shortUrl', redireccionamiento );
+
+module.exports = router;

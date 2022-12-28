@@ -1,1 +1,4 @@
 nodemon.json: guarda todas las extenciones de la cual esta apendiente cuando hay un cambio, de esa forma reinicia el servidor
+dotenv: gestion variables de entorno protegidas
+mongoose: funciona como ODM, para hacer CRUD en MongoDB
+express-handlebars: es un motor de plantillas, para inyectar desde el backend al front

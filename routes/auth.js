@@ -1,8 +1,11 @@
 const express = require('express');
+const { loginForm, registerForm, registerUser, confirmarCuenta, loginUser } = require('../controllers/authControllers');
 const router = express.Router()
 
-router.get('/login', (req, res) =>{ 
-    res.render('login') // renderizo home desde la carpeta views
-});
+router.post('/register', registerUser);
+router.get('/register', registerForm);
+router.get('/confirmar/:token', confirmarCuenta)
+router.get('/login', loginForm);
+router.post('/login', loginUser);
 
 module.exports = router
