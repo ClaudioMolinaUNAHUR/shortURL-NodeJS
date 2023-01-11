@@ -46,9 +46,9 @@ userSchema.pre('save', async function(next){
 })
 
 //agrego un metodo al esquema
-userSchema.method.comparePassword = async function(candidatePassword){
+userSchema.method('comparePassword', async function(candidatePassword){
     return await bcrypt.compare(candidatePassword, this.password) //this se refiere uno de los datos del esquema en la DB, candidate es la password, que viene del body
-}
+})
 
 //creamos el modelo en mongoDB
 const User = mongoose.model('User', userSchema);

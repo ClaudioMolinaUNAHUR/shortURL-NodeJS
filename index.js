@@ -1,13 +1,39 @@
 const express = require('express');
+const session = require('express-session');
+const flash = require('connect-flash'); // mensajes que viven una sola vez
+const passport = require('passport');
 const { create } = require('express-handlebars');
 
 const homeRoute = require("./routes/home");
 const loginRoute = require("./routes/auth");
+const User = require('./models/User');
 
 require('dotenv').config(); // importamos variables de entorno. config() puede llevar configuracion para cambiar el nombre a .env
 require('./database/db') // importamos la db
 
 const app = express(); // inicializo express
+
+app.use(//configuarion de session-express, se almacena en memoria RAM
+    session({
+        secret: "keyboard cat",
+        resave: false,
+        saveUninitialized: false,
+        name: "secret-name-blablabla"
+    })
+);
+
+app.use(flash()); // iniciar flash
+
+app.use(passport.initialize()); 
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+    done(null, {id: user._id, userName: user.userName}); // nos permite crear una sesion para un usuario
+}); // luego se agarra de req.user
+passport.deserializeUser(async(user, done)=> {
+    const userDB = await User.findById(user.id); 
+    return done(null, {id: userDB._id, userName: userDB.userName}); //actualiza el usuario si se modifico, pero antes verifica si existe el user en la DB
+})
 
 //extname: cambiar extencion de .handlebars a .hbs
 //partialsDir: permite separar en componentes los objetos web, simil react o angular

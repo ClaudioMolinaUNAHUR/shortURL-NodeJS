@@ -2,3 +2,13 @@ nodemon.json: guarda todas las extenciones de la cual esta apendiente cuando hay
 dotenv: gestion variables de entorno protegidas
 mongoose: funciona como ODM, para hacer CRUD en MongoDB
 express-handlebars: es un motor de plantillas, para inyectar desde el backend al front
+navigator.clipboard: es una api de JS, que permite copiar y guardar en portapapeles
+express-session: permite guardar una sesiond usuario en una cookie propia(memo interna)
+connect-flash: permite guardar una clave-valor, para luego ser usada por unica vez por el usuario con sesion
+express-validator: funciona de middleware, se encarga de gestionar variables que vienen por parametros, como body o params,
+                   para poder interceptarlas antes de tiempo, estas se graban en un arreglo, que puede tener multiples claves,
+                   como nombre, apellido o email, y son devueltas como un Obj de JS
+passport: almacena la informacion del usuario que inicio sesion, este podra ahora dentro de su sesion, interactuar con sus datos,
+          y cuando vuelva a iniciar podra solicitar su ultimo estado, es decir funcionaria como una entidad-relacion
+
+

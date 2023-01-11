@@ -64,11 +64,12 @@ const redireccionamiento = async(req, res) => {
     const {shortUrl} = req.params // el parametro de este get lo declare con Url en mayus y minus, por eso q al hacer la consulta
     try {
         const urlDB = await Url.findOne({ shortURL: shortUrl }) // debo decirle q la columna shortURL: va a buscar el valor de shortUrl
-                                                                //solicion seria, q parametros tmb le ponga de forma identica, pero lo hice asi para q se note
-        res.redirect(urlDB.origin)
-        
+        //solucion seria, q parametros tmb le ponga de forma identica, pero lo hice asi para q se note
+        if (!urlDB?.origin) {
+            return res.send("error no existe el redireccionamiento");
+        }
+        res.redirect(urlDB.origin)        
     } catch (error) {
-        console.log(error)
         res.send('error al redireccionar')
     };
 ;}
