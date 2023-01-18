@@ -3,6 +3,7 @@ const session = require('express-session');
 const flash = require('connect-flash'); // mensajes que viven una sola vez
 const passport = require('passport');
 const { create } = require('express-handlebars');
+const csrf = require('csurf');
 
 const homeRoute = require("./routes/home");
 const loginRoute = require("./routes/auth");
@@ -48,7 +49,15 @@ app.set("views", "./views"); // y donde estan los archivos del motor
 
 //use es un middle, si lo pongo antes de renderizar views, se va a ejecutar primero
 app.use(express.static(__dirname + '/public')); //ruta public (FRONTEND) 
-app.use(express.urlencoded({ extended:true })) //habilitar el form, osea lo que venga de body
+app.use(express.urlencoded({ extended:true })); //habilitar el form, osea lo que venga de body
+
+app.use(csrf()); // generador de token para formularios
+app.use((req, res, next) => {
+    // declaro variables globales / csrfToken, envia token en cada consulta / mensajes, tengo 2 partes q a parte de renderizar envian variables al front, con esto lo omito
+    res.locals.csrfToken = req.csrfToken(); // estoy diciendo, q antes de cada de cada operacion, envio Tokens como respuesta y se puede consultar luego
+    res.locals.mensajes = req.flash("mensajes");
+    next();
+});
 
 app.use("/", homeRoute);
 app.use("/auth", loginRoute);

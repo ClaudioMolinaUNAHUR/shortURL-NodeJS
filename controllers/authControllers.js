@@ -1,10 +1,22 @@
 const User = require("../models/User");
 const { nanoid } = require('nanoid');
-const { validationResult } = require('express-validator')
+const { validationResult } = require('express-validator');
+const nodemailer = require("nodemailer");
+require('dotenv').config();
 
 
-const loginForm =  (req, res) => { // primero creamos un GET para renderizar la primera vez
-    res.render('login', { mensajes: req.flash("mensajes") }); //envio al front los mensajes de errores
+const loginForm =  (req, res) => { // primero creamos un GET para renderizar la primera vez    
+    //res.render('login', { mensajes: req.flash("mensajes") }); //envio al front los mensajes de errores
+
+    //al instalar crsf, hago que mensajes pase de forma global, ya no necesito mandarlos en el render
+    res.render('login');
+};
+
+const registerForm =  (req, res) => { // primero creamos un GET para renderizar la primera vez
+    //res.render('register', { mensajes: req.flash("mensajes") });
+
+    //al instalar crsf, hago que mensajes pase de forma global, ya no necesito mandarlos en el render
+    res.render('register');
 };
 
 const loginUser = async(req, res) =>{ // con esto hacemos POST
@@ -37,10 +49,6 @@ const loginUser = async(req, res) =>{ // con esto hacemos POST
     }
 }
 
-const registerForm =  (req, res) => { // primero creamos un GET para renderizar la primera vez
-    res.render('register', { mensajes: req.flash("mensajes") });
-};
-
 const registerUser =  async(req, res) => { // con esto hacemos POST
 
     const errors = validationResult(req)
@@ -57,6 +65,24 @@ const registerUser =  async(req, res) => { // con esto hacemos POST
 
         user = new User({userName, email, password, tokenConfirm: nanoid() }); // creo un nuevo usuario si ya paso la validacion, podria pasar directamente REQ.BODY
         await user.save(); // Previamente se hasheo la pass, usando User.pre
+
+        //configuracion de un transporter para enviar Email
+        const transport = nodemailer.createTransport({
+            host: "smtp.mailtrap.io",
+            port: 2525,
+            auth: {
+              user: process.env.userEmail,
+              pass: process.env.passEmail
+            }
+        });
+
+        await transport.sendMail({
+            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            to: user.email, // list of receivers
+            subject: "Verifica tu cuenta de Correo", // Subject line
+            html: `<a href="http://localhost:5000/auth/confirmar/${user.tokenConfirm}">Verifica tu cuenta aqui</a>`, // html body
+        });
+        
         req.flash("mensajes", [{msg: "Revisa tu correo y valida la cuenta"}]) // guarda un mensaje en flash
         res.redirect('/auth/login')
     } catch (error) {
