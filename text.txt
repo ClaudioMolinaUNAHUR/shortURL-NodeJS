@@ -10,6 +10,7 @@ express-validator: funciona de middleware, se encarga de gestionar variables que
                    como nombre, apellido o email, y son devueltas como un Obj de JS
 passport: almacena la informacion del usuario que inicio sesion, este podra ahora dentro de su sesion, interactuar con sus datos,
           y cuando vuelva a iniciar podra solicitar su ultimo estado, es decir funcionaria como una entidad-relacion
-csurf: middleware se utiliza como Token, que se van a enviar al hacer submit en un formulario, y que la informacion viaje cifrada
+csurf: middleware se utiliza como Token, coloca un token en nuestros formulario, permitiendo que nuestro proyecto solo reconosca
+       los formularios con nuestros token
 
 
