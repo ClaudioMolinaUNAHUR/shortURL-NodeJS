@@ -1,25 +1,42 @@
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // conexion con sessiones de mongo
 const flash = require('connect-flash'); // mensajes que viven una sola vez
 const passport = require('passport');
 const { create } = require('express-handlebars');
 const csrf = require('csurf');
+const mongoSanitize = require('express-mongo-sanitize'); // previene injecciones de otros datos de mongo
+const cors = require('cors'); //bloquea solicitudes, diciendo que solo cierto dominio, va a consumir nuestra web
 
 const homeRoute = require("./routes/home");
 const loginRoute = require("./routes/auth");
 const User = require('./models/User');
 
 require('dotenv').config(); // importamos variables de entorno. config() puede llevar configuracion para cambiar el nombre a .env
-require('./database/db') // importamos la db
+const clienteDB = require('./database/db'); // importamos la db
 
 const app = express(); // inicializo express
 
-app.use(//configuarion de session-express, se almacena en memoria RAM
+const corsOptions = {
+    credentials: true,
+    origin: process.env.PATHHEROKU || "*",  // *: permite que cualquiera pueda ingresar
+    method: ['GET', 'POST'], // nos dice q solo nuestro sitio admite estos verbos
+};
+app.use(cors());
+
+app.set("trust proxy", 1);
+app.use(
     session({
-        secret: "keyboard cat",
+        secret: process.env.SECRETSESSION,
         resave: false,
         saveUninitialized: false,
-        name: "secret-name-blablabla"
+        name: "secret-name-blablabla", // hasta aca: configuarion de session-express, se almacena en memoria RAM
+        store: MongoStore.create({ // esto utiliza session de mongo DB
+            clientPromise: clienteDB,
+            dbName: process.env.DBNAME
+        }),
+        cookie: { secure: process.env.MODO === 'production', maxAge: 30 * 24 * 60 * 60 * 1000 }
+        //  secure solo HTTPS,en desarrollo no funciona, maxAge es el tiempo de la sesion
     })
 );
 
@@ -52,6 +69,8 @@ app.use(express.static(__dirname + '/public')); //ruta public (FRONTEND)
 app.use(express.urlencoded({ extended:true })); //habilitar el form, osea lo que venga de body
 
 app.use(csrf()); // generador de token para formularios
+app.use(mongoSanitize());
+
 app.use((req, res, next) => {
     // declaro variables globales / csrfToken, envia token en cada consulta / mensajes, tengo 2 partes q a parte de renderizar envian variables al front, con esto lo omito
     res.locals.csrfToken = req.csrfToken(); // estoy diciendo, q antes de cada de cada operacion, envio Tokens como respuesta y se puede consultar luego

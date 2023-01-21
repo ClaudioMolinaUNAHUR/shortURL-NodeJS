@@ -1,6 +1,7 @@
 nodemon.json: guarda todas las extenciones de la cual esta apendiente cuando hay un cambio, de esa forma reinicia el servidor
 dotenv: gestion variables de entorno protegidas
 mongoose: funciona como ODM, para hacer CRUD en MongoDB
+connect-mongoose: permite administrar session, a traves de la plataforma de MongoDB
 express-handlebars: es un motor de plantillas, para inyectar desde el backend al front
 navigator.clipboard: es una api de JS, que permite copiar y guardar en portapapeles
 express-session: permite guardar una sesiond usuario en una cookie propia(memo interna)
@@ -12,5 +13,7 @@ passport: almacena la informacion del usuario que inicio sesion, este podra ahor
           y cuando vuelva a iniciar podra solicitar su ultimo estado, es decir funcionaria como una entidad-relacion
 csurf: middleware se utiliza como Token, coloca un token en nuestros formulario, permitiendo que nuestro proyecto solo reconosca
        los formularios con nuestros token
+formidable: nos permite manejar archivos
+jimp: permite dimensionar imagenes
 
 
