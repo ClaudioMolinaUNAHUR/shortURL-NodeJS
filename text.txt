@@ -15,5 +15,5 @@ csurf: middleware se utiliza como Token, coloca un token en nuestros formulario,
        los formularios con nuestros token
 formidable: nos permite manejar archivos
 jimp: permite dimensionar imagenes
-
+deploy: https://shorturl-molina.onrender.com
 
